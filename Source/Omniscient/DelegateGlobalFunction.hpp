@@ -12,10 +12,10 @@ namespace OEvent
   {
   public:
     // Public typedefs fore ease of use
-    typedef void(Caller::*Function)(EventType *e);
+    typedef void(*Function)(EventType *e);
 
     // Constructor
-    DelegateGlobalFunction(CallerFunction func);
+    DelegateGlobalFunction(Function func);
 
     // Member functions
     void Call(OEvent *e);

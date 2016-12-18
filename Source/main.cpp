@@ -1,32 +1,55 @@
 #include <iostream>
+#include <string>
 #include "Omniscient/DelegateMemberFunction.hpp"
+#include "Omniscient/EventSystem.hpp"
+#include "Omniscient/ObjectEventManager.hpp"
 
+#define ENABLE_DEBUG_PRINT
+#ifdef ENABLE_DEBUG_PRINT
+  #define D_PRINT(v) do{ std::cout << #v << " : " << v << '\n'; } while (0)
+#else
+  #define D_PRINT(v)
+#endif
+static OEvent::EventSystem es;
 
-class MyObj
+class TestEvent : public OEvent::OEvent
+{
+public:
+  TestEvent(const std::string msg) : Message(msg) { }
+  const std::string Message;
+  friend std::ostream &operator<<(std::ostream &os, const TestEvent &rhs)
+  {
+    os << rhs.Message;
+    return os;
+  }
+};
+
+class MyObj : public OEvent::ObjectEventManager
 {
 public:
   MyObj();
-  void MyFunction(OEvent::OEvent *e);
+  void MyFunction(TestEvent *e);
 };
 
-void MyObj::MyFunction(OEvent::OEvent *e)
+void MyObj::MyFunction(TestEvent *function_argument)
 {
-  std::printf("My function was called!\n");
+  D_PRINT(*function_argument);
 }
 
-MyObj::MyObj()
+MyObj::MyObj() : ObjectEventManager(es)
 {
-  OEvent::OEvent e;
-  auto a = OEvent::DelegateMemberFunction<MyObj, OEvent::OEvent>(&MyObj::MyFunction, this);
-  a.Call(&e);
+  Connect(this, &MyObj::MyFunction);
+  Connect(this, &MyObj::MyFunction);
 }
-
-
 
 
 int main(int argc, char **argv)
 {
-  MyObj m;
+  {
+    MyObj m;
+    D_PRINT(es.Dispatch(new TestEvent("object should exist")));
+  }
+  D_PRINT(es.Dispatch(new TestEvent("no object exists")));
   return 0;
 }
 

@@ -7,7 +7,7 @@ namespace OEvent
   class DelegateGroupMember
   {
   public:
-    // Constructor / Destructor
+    // Constructors and Destructor
     DelegateGroupMember(Delegate *d, O_ID DelegateID, bool handleCleanup_ = true);
     DelegateGroupMember(DelegateGroupMember &rhs);
     ~DelegateGroupMember();

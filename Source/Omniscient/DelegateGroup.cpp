@@ -1,6 +1,7 @@
 #include "DelegateGroup.hpp"
 
 
+
 namespace OEvent
 {
   // Running Unique ID Static initialization
@@ -18,7 +19,7 @@ namespace OEvent
   // unique ID given to it.
   O_ID DelegateGroup::Add(Delegate *d)
   {
-    delegates_.push_back(DelegateGroupMember(d, runningUID_++));
+    delegates_.push_back(DelegateGroupMember(d, ++runningUID_));
     return runningUID_;
   }
 
@@ -38,11 +39,18 @@ namespace OEvent
 
 
   // Dispatch the event e to all active delegates in the group.
-  void DelegateGroup::Dispatch(OEvent *e)
+  // Returns the number of delegates the event was dispatchedo to.
+  int DelegateGroup::Dispatch(OEvent *e)
   {
+    int numDispatched{ 0 };
     for (unsigned int i{ 0 }; i < delegates_.size(); ++i)
       if (delegates_[i].Active)
+      {
         delegates_[i].DelegateObject->Call(e);
+        ++numDispatched;
+      }
+
+    return numDispatched;
   }
 
 

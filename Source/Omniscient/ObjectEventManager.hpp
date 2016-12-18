@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "ODefines.hpp"
-
+#include "EventSystem.hpp"
 
 
 namespace OEvent
@@ -12,14 +12,20 @@ namespace OEvent
   class ObjectEventManager
   {
   public:
-    // Destructor
-    ~ObjectEventManager();
+    // Constructor and Destructor
+    ObjectEventManager(EventSystem &es);
+    virtual ~ObjectEventManager();
 
     // Member Functions
-    void Connect();
-  
+    template <typename Caller, typename EventType>
+    void Connect(Caller *c, void(Caller::*func)(EventType *));
+    //void Disconnect(O_ID toDisconnect);
+
   private:
     // Variables
     std::vector<O_ID> connections_;
+    EventSystem &eventSystem_;
   };
 }
+
+#include "ObjectEventManager.tpp"

@@ -12,21 +12,21 @@ namespace OEvent
   class DelegateGroup
   {
   public:
-	// Constructor
+	  // Constructor
     DelegateGroup();
 
-	// Member Functions
+	  // Member Functions
     O_ID Add(Delegate *d);
     void Remove(O_ID);
-    void Dispatch(OEvent *e);
+    int Dispatch(OEvent *e);
     void CleanRemoved();
 
   private:
     // Member Variables
-	std::vector< DelegateGroupMember > delegates_;
+  	std::vector< DelegateGroupMember > delegates_;
     bool dirty_;
 
-	// Static variables
-	static O_ID runningUID_;
+	  // Static variables
+	  static O_ID runningUID_;
   };
 }
